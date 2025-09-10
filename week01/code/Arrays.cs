@@ -13,6 +13,26 @@ public static class Arrays
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
 
+        //Part 1: Arrays
+        // PLAN (step by step):
+        // 1) Create a double array with the size "length".
+        // 2) Fill each position i of the array with the appropriate multiple:
+        //    - The first element (index 0) should be "number" (that is, number * 1).
+        //    - The second element (index 1) should be "number * 2", and so on...
+        //    - General formula: result[i] = number * (i + 1).
+        // 3) Return the filled array.
+        //
+        // Notes:
+        // - It is assumed that "length" > 0 (as stated in the problem).
+        // - The type is double to allow fractional "number" if necessary.
+
+        double[] result = new double[length];
+
+        for (int i = 0; i < length; i++)
+        {
+            result[i] = number * (i + 1);
+        }
+
         return []; // replace this return statement with your own
     }
 
