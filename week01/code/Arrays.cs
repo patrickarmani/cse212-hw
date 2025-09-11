@@ -20,7 +20,7 @@ public static class Arrays
         //    - The first element (index 0) should be "number" (that is, number * 1).
         //    - The second element (index 1) should be "number * 2", and so on...
         //    - General formula: result[i] = number * (i + 1).
-        // 3) Return the filled array.
+        // 3) Return the array.
         //
         // Notes:
         // - It is assumed that "length" > 0 (as stated in the problem).
@@ -33,7 +33,8 @@ public static class Arrays
             result[i] = number * (i + 1);
         }
 
-        return []; // replace this return statement with your own
+        //return []; // replace this return statement with your own
+        return result;
     }
 
     /// <summary>
@@ -49,5 +50,23 @@ public static class Arrays
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
+
+        // PLAN:
+        // 1) Normalize amount: amount %= data.Count (avoids unnecessary full rotations).
+        // 2) If amount == 0, there is nothing to do.
+        // 3) Capture the "tail" of size 'amount' at the end of the list.
+        // 4) Remove this tail from the end.
+        // 5) Insert this tail at the beginning (position 0).
+
+        int n = data.Count;
+        amount %= n;
+        if (amount == 0) return;
+
+        //tail = last 'amount' elements
+        var tail = data.GetRange(n - amount, amount);
+        // remove them from the end   
+        data.RemoveRange(n - amount, amount);
+        // insert them at the beginning
+        data.InsertRange(0, tail);
     }
 }
