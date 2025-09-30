@@ -25,6 +25,25 @@
     private static int CountDuplicates(int[] data)
     {
         // Add code here.
-        return 0;
+        // Counts how many DISTINCT values appear more than once.
+        // Uses two HashSets:
+        //  - 'seen' stores values encountered for the first time;
+        //  - 'duplicates' collects values that appear at least twice.
+        // Finally returns duplicates.Count (e.g., [1,1,2,2,2] -> 2 for {1,2}).
+        var seen = new HashSet<int>();
+        var duplicates = new HashSet<int>();
+
+        foreach (var num in data)
+        {
+            if (!seen.Add(num))
+
+            {
+                duplicates.Add(num);
+            }
+
+
+        }
+        return duplicates.Count;
+
     }
 }
