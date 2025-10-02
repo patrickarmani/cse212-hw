@@ -1,4 +1,8 @@
+#nullable enable
 using System.Text.Json;
+using System.Globalization;
+using System.Collections.Generic;
+
 
 public static class SetsAndMaps
 {
@@ -63,21 +67,20 @@ public static class SetsAndMaps
         var degrees = new Dictionary<string, int>();
         foreach (var line in File.ReadLines(filename))
         {
-            var fields = line.Split(",");
+            // var fields = line.Split(",");
             // TODO Problem 2 - ADD YOUR CODE HERE
             if (string.IsNullOrWhiteSpace(line)) continue;
+
+            var fields = line.Split(',');
             if (fields.Length < 4) continue;           // 4th column = index 3
+
 
             var degree = fields[3].Trim();
             if (degree.Length == 0) continue;
 
-            if (degrees.ContainsKey(degree))
-                degrees[degree]++;
-            else
-                degrees[degree] = 1;
-
+            if (degrees.ContainsKey(degree)) degrees[degree]++;
+            else degrees[degree] = 1;
         }
-
         return degrees;
     }
 
@@ -100,8 +103,45 @@ public static class SetsAndMaps
     public static bool IsAnagram(string word1, string word2)
     {
         // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        if (word1 is null || word2 is null) return false;
+
+        var counts = new Dictionary<char, int>();
+
+        foreach (char raw in word1)
+        {
+            if (char.IsWhiteSpace(raw)) continue;
+            char c = char.ToUpperInvariant(raw);
+            // if (!counts.TryGetValue(c, out var n)) return false;
+            counts[c] = counts.TryGetValue(c, out var n) ? n + 1 : 1;
+            // if (n == 1) counts.Remove(c);
+            // else counts[c] = n - 1;
+        }
+
+
+        foreach (char raw in word2)
+        {
+            if (char.IsWhiteSpace(raw)) continue;
+            char c = char.ToUpperInvariant(raw);
+            if (!counts.TryGetValue(c, out var n)) return false;
+            if (n == 1) counts.Remove(c);
+            else counts[c] = n - 1;
+        }
+
+        return counts.Count == 0;
+
     }
+
+
+    // // Count letters from 'a'
+    // foreach (char c in a)
+    // {
+    //     if (!counts.TryGetValue(c, out var n)) return false;
+    //     n--;
+    //     if (n == 0) counts.Remove(c);
+    //     else counts[c] = n;
+    // }
+    // return false;
+
 
     /// <summary>
     /// This function will read JSON (Javascript Object Notation) data from the 
@@ -134,6 +174,21 @@ public static class SetsAndMaps
         // on those classes so that the call to Deserialize above works properly.
         // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
         // 3. Return an array of these string descriptions.
-        return [];
+        if (featureCollection?.Features is null || featureCollection.Features.Count == 0)
+            return Array.Empty<string>();
+
+        var result = featureCollection.Features
+            .Where(f => f?.Properties != null && !string.IsNullOrWhiteSpace(f.Properties!.Place))
+            .Select(f =>
+            {
+                var mag = f!.Properties!.Mag;
+                var magText = mag.HasValue
+                    ? mag.Value.ToString("0.0", CultureInfo.InvariantCulture)
+                    : "?";
+                return $"{f.Properties!.Place} - Mag {magText}";
+            })
+            .ToArray();
+
+        return result;
     }
 }
