@@ -23,14 +23,32 @@ public class Basketball
         reader.TextFieldType = FieldType.Delimited;
         reader.SetDelimiters(",");
         reader.ReadFields(); // ignore header row
-        while (!reader.EndOfData) {
+        while (!reader.EndOfData)
+        {
             var fields = reader.ReadFields()!;
             var playerId = fields[0];
             var points = int.Parse(fields[8]);
+            if (players.ContainsKey(playerId))
+                players[playerId] += points;
+            else
+                players[playerId] = points;
         }
 
-        Console.WriteLine($"Players: {{{string.Join(", ", players)}}}");
+        // Console.WriteLine($"Players: {{{string.Join(", ", players)}}}");
+        var top10 = players.OrderByDescending(kv => kv.Value).Take(10).ToList();
+
+        Console.WriteLine("Top 10 - Career Points");
+        Console.WriteLine("----------------------");
+        int rank = 1;
+        foreach (var (playerId, totalPoints) in top10)
+        {
+            Console.WriteLine($"{rank,2}. {playerId,-15} {totalPoints}");
+            rank++;
+        }
 
         var topPlayers = new string[10];
+        for (int i = 0; i < top10.Count; i++)
+            topPlayers[i] = top10[i].Key;
+
     }
 }
